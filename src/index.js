@@ -23,7 +23,7 @@ app.use(
         return callback(null, true)
       }
 
-      return callback(new Error('Origen no permitido por CORS'))
+      return callback(new Error('Origin not allowed by CORS'))
     },
     methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
     allowedHeaders: ['Content-Type', 'Authorization']
@@ -39,5 +39,5 @@ app.use(notFound)
 app.use(errorHandler)
 
 app.listen(3000, () => {
-  console.log('Servidor corriendo en http://localhost:3000')
+  console.log('Server running at http://localhost:3000')
 })

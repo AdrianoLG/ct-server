@@ -6,27 +6,27 @@ function validateCreateLead(req, res, next) {
   if (!full_name || !email || !location_id || !campaign_id || !birth_date) {
     return res.status(400).json({
       message:
-        'Campos requeridos: full_name, email, location_id, campaign_id y birth_date'
+        'Required fields: full_name, email, location_id, campaign_id and birth_date'
     })
   }
 
   // Validate full_name: type, length and allowed characters
   if (typeof full_name !== 'string' || full_name.trim().length < 2) {
     return res.status(400).json({
-      message: 'El campo full_name debe ser texto y tener al menos 2 caracteres'
+      message: 'The full_name field must be text and have at least 2 characters'
     })
   }
 
   if (full_name.length > 255) {
     return res.status(400).json({
-      message: 'El campo full_name no puede exceder 255 caracteres'
+      message: 'The full_name field cannot exceed 255 characters'
     })
   }
 
   // Allow only letters, spaces, hyphens and apostrophes
   if (!/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s'-]+$/.test(full_name.trim())) {
     return res.status(400).json({
-      message: 'El campo full_name contiene caracteres inválidos'
+      message: 'The full_name field contains invalid characters'
     })
   }
 
@@ -34,53 +34,53 @@ function validateCreateLead(req, res, next) {
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
   if (typeof email !== 'string' || !emailRegex.test(email)) {
     return res.status(400).json({
-      message: 'El campo email no tiene un formato válido'
+      message: 'The email field has an invalid format'
     })
   }
 
   if (email.length > 255) {
     return res.status(400).json({
-      message: 'El campo email no puede exceder 255 caracteres'
+      message: 'The email field cannot exceed 255 characters'
     })
   }
 
   // Validate location_id and campaign_id
   if (!Number.isInteger(location_id) || location_id <= 0) {
     return res.status(400).json({
-      message: 'El campo location_id debe ser un número entero mayor a 0'
+      message: 'The location_id field must be an integer greater than 0'
     })
   }
 
   if (!Number.isInteger(campaign_id) || campaign_id <= 0) {
     return res.status(400).json({
-      message: 'El campo campaign_id debe ser un número entero mayor a 0'
+      message: 'The campaign_id field must be an integer greater than 0'
     })
   }
 
   // Validate birth_date
   if (typeof birth_date !== 'string') {
     return res.status(400).json({
-      message: 'El campo birth_date debe ser texto'
+      message: 'The birth_date field must be text'
     })
   }
 
   const dateRegex = /^\d{4}-\d{2}-\d{2}$/
   if (!dateRegex.test(birth_date)) {
     return res.status(400).json({
-      message: 'El campo birth_date debe estar en formato YYYY-MM-DD'
+      message: 'The birth_date field must be in YYYY-MM-DD format'
     })
   }
 
   const birthDate = new Date(birth_date)
   if (isNaN(birthDate.getTime())) {
     return res.status(400).json({
-      message: 'El campo birth_date contiene una fecha inválida'
+      message: 'The birth_date field contains an invalid date'
     })
   }
 
   if (birthDate > new Date()) {
     return res.status(400).json({
-      message: 'La fecha de nacimiento no puede ser posterior a hoy'
+      message: 'The birth date cannot be later than today'
     })
   }
 
@@ -101,7 +101,7 @@ async function validateUniqueLeadEmail(req, res, next) {
   )
 
   if (existingLeadRows.length > 0) {
-    return res.status(409).json({ message: 'El email está duplicado' })
+    return res.status(409).json({ message: 'The email is already in use' })
   }
 
   next()
