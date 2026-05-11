@@ -5,6 +5,7 @@ const leadsRoutes = require('./routes/leadsRoutes')
 const infoRoutes = require('./routes/infoRoutes')
 const reportRoutes = require('./routes/reportRoutes')
 const { notFound, errorHandler } = require('./middlewares/errorHandler')
+const path = require('path')
 
 const app = express()
 
@@ -30,6 +31,7 @@ app.use(
   })
 )
 
+app.use(express.static(path.join(__dirname, '../public')))
 app.use(express.json())
 app.use('/leads', leadsRoutes)
 app.use('/info', infoRoutes)
