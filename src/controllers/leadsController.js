@@ -6,11 +6,11 @@ async function getLeads(req, res) {
 }
 
 async function createLead(req, res) {
-  const { name, email, phone, location_id, campaign_id } = req.body
+  const { full_name, email, birth_date, location_id, campaign_id } = req.body
   const lead = await leadsModel.createLead({
-    name,
+    full_name,
     email,
-    phone,
+    birth_date,
     location_id,
     campaign_id
   })

@@ -1,16 +1,17 @@
-function validateCreateLead(req, res, next) {
-  const { name, email, phone, location_id, campaign_id } = req.body
+const db = require('../config/db')
 
-  if (!name || !email || !phone || !location_id || !campaign_id) {
+function validateCreateLead(req, res, next) {
+  const { full_name, email, location_id, campaign_id } = req.body
+
+  if (!full_name || !email || !location_id || !campaign_id) {
     return res.status(400).json({
-      message:
-        'Campos requeridos: name, email, phone, location_id y campaign_id'
+      message: 'Campos requeridos: full_name, email, location_id y campaign_id'
     })
   }
 
-  if (typeof name !== 'string' || name.trim().length < 2) {
+  if (typeof full_name !== 'string' || full_name.trim().length < 2) {
     return res.status(400).json({
-      message: 'El campo name debe ser texto y tener al menos 2 caracteres'
+      message: 'El campo full_name debe ser texto y tener al menos 2 caracteres'
     })
   }
 
@@ -18,12 +19,6 @@ function validateCreateLead(req, res, next) {
   if (typeof email !== 'string' || !emailRegex.test(email)) {
     return res.status(400).json({
       message: 'El campo email no tiene un formato valido'
-    })
-  }
-
-  if (typeof phone !== 'string' || phone.trim().length < 6) {
-    return res.status(400).json({
-      message: 'El campo phone debe ser texto y tener al menos 6 caracteres'
     })
   }
 
@@ -42,6 +37,27 @@ function validateCreateLead(req, res, next) {
   next()
 }
 
+async function validateUniqueLeadEmail(req, res, next) {
+  const { email } = req.body
+
+  const [existingLeadRows] = await db.query(
+    `
+    SELECT id
+    FROM leads
+    WHERE email = ?
+    LIMIT 1
+    `,
+    [email]
+  )
+
+  if (existingLeadRows.length > 0) {
+    return res.status(409).json({ message: 'Email duplicado' })
+  }
+
+  next()
+}
+
 module.exports = {
-  validateCreateLead
+  validateCreateLead,
+  validateUniqueLeadEmail
 }

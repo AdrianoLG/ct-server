@@ -14,22 +14,28 @@ async function getAllLeads() {
   return rows
 }
 
-async function createLead({ name, email, phone, location_id, campaign_id }) {
+async function createLead({
+  full_name,
+  email,
+  birth_date,
+  location_id,
+  campaign_id
+}) {
   const [result] = await db.query(
     `
     INSERT INTO leads
-      (name, email, phone, location_id, campaign_id)
+      (full_name, email, birth_date, location_id, campaign_id)
     VALUES
       (?, ?, ?, ?, ?)
     `,
-    [name, email, phone, location_id, campaign_id]
+    [full_name, email, birth_date, location_id, campaign_id]
   )
 
   return {
     id: result.insertId,
-    name,
+    full_name,
     email,
-    phone,
+    birth_date,
     location_id,
     campaign_id
   }
